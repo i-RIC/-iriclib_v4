@@ -2,12 +2,14 @@
 
 #include <Poco/ConsoleChannel.h>
 #include <Poco/Environment.h>
+#include <Poco/FileChannel.h>
 #include <Poco/FormattingChannel.h>
 #include <Poco/Logger.h>
 #include <Poco/LogStream.h>
 #include <Poco/PatternFormatter.h>
 #include <Poco/UTF8String.h>
 
+#include <string>
 #include <sstream>
 
 namespace {
@@ -59,6 +61,12 @@ void _iric_logger_init()
 			s << valid_names.at(i);
 		}
 		s << "." << std::endl;
+	}
+
+	std::string logFileName = Poco::Environment::get("IRIC_LOG_FILE", "");
+	if (logFileName.length() > 0) {
+		auto fileChannel = new Poco::FileChannel(logFileName);
+		logger.setChannel(new Poco::FormattingChannel(fmt, fileChannel));
 	}
 
 	_initialized = true;
