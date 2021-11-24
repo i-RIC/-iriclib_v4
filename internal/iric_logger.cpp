@@ -1,14 +1,16 @@
 #include "iric_logger.h"
 
-#include <Poco/ConsoleChannel.h>
 #include <Poco/Environment.h>
 #include <Poco/FileChannel.h>
 #include <Poco/FormattingChannel.h>
 #include <Poco/Logger.h>
 #include <Poco/LogStream.h>
 #include <Poco/PatternFormatter.h>
+#include <Poco/SplitterChannel.h>
+#include <Poco/StreamChannel.h>
 #include <Poco/UTF8String.h>
 
+#include <iostream>
 #include <string>
 #include <sstream>
 
@@ -49,10 +51,15 @@ void _iric_logger_init()
 	}
 
 	auto& logger = Poco::Logger::root();
-	auto fmt = new Poco::PatternFormatter("%p: %t");
-	auto consoleChannel = new Poco::ConsoleChannel();
-	logger.setChannel(new Poco::FormattingChannel(fmt, consoleChannel));
 	logger.setLevel(logLevel);
+	auto channels = new Poco::SplitterChannel();
+	logger.setChannel(channels);
+
+	auto fmt = new Poco::PatternFormatter("%p: %t");
+
+	auto stdoutChannel = new Poco::StreamChannel(std::cout);
+	channels->addChannel(new Poco::FormattingChannel(fmt, stdoutChannel));
+
 	if (! ok) {
 		Poco::LogStream s(_iric_logger_get(), Poco::Message::PRIO_FATAL);
 		s << "IRIC_LOG_LEVEL is invalid, and set to be default value: FATAL. Valid values are ";
@@ -66,7 +73,7 @@ void _iric_logger_init()
 	std::string logFileName = Poco::Environment::get("IRIC_LOG_FILE", "");
 	if (logFileName.length() > 0) {
 		auto fileChannel = new Poco::FileChannel(logFileName);
-		logger.setChannel(new Poco::FormattingChannel(fmt, fileChannel));
+		channels->addChannel(new Poco::FormattingChannel(fmt, fileChannel));
 	}
 
 	_initialized = true;
@@ -74,7 +81,7 @@ void _iric_logger_init()
 
 Poco::Logger& _iric_logger_get()
 {
-	return Poco::Logger::get(LOGGER_NAME);
+	return Poco::Logger::root();
 }
 
 void _iric_logger_trace(const std::string& message)
