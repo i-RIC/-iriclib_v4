@@ -211,6 +211,13 @@ jobs:
           Set-Location lib/src/iriclib-git/_vs2019_no_fortran
           cmake --install . --config release --prefix ..\..\..\install\iriclib-$env:IRICLIB_VER\
 
+      - name: Upload artifact (user forks)
+        if: ${{ github.repository != 'i-RIC/iriclib_v4' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: iricsdk
+          path: .\lib\install
+
       - name: 7z sdk
         run: |
           Rename-Item .\lib\install iricsdk
@@ -232,9 +239,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           directory: lib/src/iriclib-git
-          branch: __${{ github.event.repository.name }}_${{ github.run_id }}_${{ github.run_attempt }}
+          branch: __${{ github.event.repository.name }}_${{ github.run_number }}_${{ github.run_attempt }}
 
       - name: Create release
+        if: ${{ github.repository == 'i-RIC/iriclib_v4' }}
         env:
           releases_url: ${{github.api_url}}/repos/${{github.repository}}/releases
         run: |
