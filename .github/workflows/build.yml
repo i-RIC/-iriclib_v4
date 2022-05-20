@@ -230,9 +230,9 @@ jobs:
         if: ${{ github.repository != 'i-RIC/iriclib_v4' }}
         uses: actions-js/push@master
         with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           directory: lib/src/iriclib-git
-          branch: __${{github.event.repository.name}}_${{github.run_id}}
+          branch: __${{ github.event.repository.name }}_${{ github.run_id }}_${{ github.run_attempt }}
 
       - name: Create release
         env:
