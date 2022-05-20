@@ -15,7 +15,9 @@ env:
   # SGEN: vs2019-x64
   # IFORT_COMPILER21: C:\Program Files (x86)\Intel\oneAPI\compiler\2021.2.0\windows\
   GENERATOR: Ninja Multi-Config
-  SGEN: ninja-x64  
+  SGEN: ninja-x64
+  PYTHON_INSTALL_DIR: C:\Python-x64
+  PYTHON_VERSION: 3.8.10
 
 jobs:
 
@@ -141,13 +143,36 @@ jobs:
           } | Set-Content .\CMakeLists.txt
           Write-Output "IRICLIB_VER=$env:IRICLIB_VER" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
+      # Debug Python based on https://github.com/actions/virtual-environments/issues/786#issuecomment-620524456
+      - name: Cache python
+        uses: actions/cache@v1.1.2
+        id: cache-python
+        with:
+          path: '${{ env.PYTHON_INSTALL_DIR }}\'
+          key: 'Windows-PythonCache-v${{ env.PYTHON_VERSION }}-amd64-dbg'
+
+      - name: Download Python
+        uses: carlosperate/download-file-action@v1.0.3
+        id: download-python
+        with:
+         file-url: 'https://www.python.org/ftp/python/${{ env.PYTHON_VERSION }}/python-${{ env.PYTHON_VERSION }}-amd64.exe'
+         file-name: 'python-${{ env.PYTHON_VERSION }}-amd64.exe'
+         location: '${{ runner.workspace }}\dl\'
+        if: steps.cache-python.outputs.cache-hit != 'true'
+
+      - name: Display Python version
+        run: ${{ env.PYTHON_INSTALL_DIR }}\python.exe -c "import sys; print(sys.version)"
+        shell: cmd
+
+      - name: List linker libs
+        run: ${{ env.PYTHON_INSTALL_DIR }}\python -c "import sysconfig;import os; print(os.listdir(sysconfig.get_config_vars('prefix')[0] + '/libs'))"
+
       - name: Configure iriclib
         run: |
           Set-Location lib/src/iriclib-git
-          cmake --preset vs2019_no_fortran
+          cmake --preset vs2019_no_fortran -DPython_ROOT_DIR=${{ env.PYTHON_INSTALL_DIR }}
 
       - name: Build iriclib debug
-        if: ${{ false }}
         run: |
           Set-Location lib/src/iriclib-git
           cmake --build --preset vs2019_no_fortran --config debug
@@ -158,7 +183,6 @@ jobs:
           cmake --build --preset vs2019_no_fortran --config release
 
       - name: Test iriclib debug
-        if: ${{ false }}
         run: |
           Set-Location lib/src/iriclib-git
           ctest --build --preset vs2019_no_fortran --build-config debug
@@ -169,7 +193,6 @@ jobs:
           ctest --build --preset vs2019_no_fortran --build-config release
 
       - name: Install iriclib debug
-        if: ${{ false }}
         run: |
           Set-Location lib/src/iriclib-git/_vs2019_no_fortran
           cmake --install . --config debug --prefix ..\..\..\install\iriclib-$env:IRICLIB_VER\

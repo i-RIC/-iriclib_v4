@@ -36,6 +36,12 @@ target_link_libraries(iric
     Python::Python
 )
 
+# this only works with Visual Studio generators
+# exclude iric from default ALL_BUILD project (Debug)
+# set_target_properties(iric
+#   PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD_DEBUG TRUE
+# )
+
 install(TARGETS iric
   LIBRARY DESTINATION ${CMAKE_INSTALL_BINDIR}/Lib/site-packages
 )
