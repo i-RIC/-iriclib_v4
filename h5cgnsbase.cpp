@@ -65,6 +65,14 @@ H5CgnsBase::H5CgnsBase(int dimension, const std::string &name, hid_t groupId, H5
 	_IRIC_LOGGER_TRACE_CALL_END("H5CgnsBase::Impl::loadZones");
 }
 
+H5CgnsBase::H5CgnsBase(int dimension, const std::string &name, H5CgnsFile* file) :
+	impl {new Impl {this}}
+{
+	impl->m_dimension = dimension;
+	impl->m_name = name;
+	impl->m_file = file;
+}
+
 H5CgnsBase::~H5CgnsBase()
 {
 	delete impl;
@@ -242,6 +250,11 @@ H5CgnsZone* H5CgnsBase::createDefaultZone(H5CgnsZone::Type type, const std::vect
 H5CgnsZone* H5CgnsBase::createZone(const std::string& name, H5CgnsZone::Type type, const std::vector<int>& size)
 {
 	return impl->createZone(name, type, size);
+}
+
+void H5CgnsBase::addZone(H5CgnsZone* zone)
+{
+	impl->addZone(zone);
 }
 
 std::string H5CgnsBase::nextDefaultName()

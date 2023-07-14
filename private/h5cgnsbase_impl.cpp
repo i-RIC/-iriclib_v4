@@ -301,10 +301,15 @@ H5CgnsZone* H5CgnsBase::Impl::createZone(const std::string& name, H5CgnsZone::Ty
 	if (ier != IRIC_NO_ERROR) {return nullptr;}
 
 	auto z = new H5CgnsZone(name, type, size, gId, m_base);
-	m_zones.push_back(z);
-	m_zoneMap.insert({name, z});
-
-	m_file->impl->m_zones.push_back(z);
+	addZone(z);
 
 	return z;
+}
+
+void H5CgnsBase::Impl::addZone(H5CgnsZone* zone)
+{
+	m_zones.push_back(zone);
+	m_zoneMap.insert({zone->name(), zone});
+
+	m_file->impl->m_zones.push_back(zone);
 }

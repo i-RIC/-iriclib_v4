@@ -66,6 +66,16 @@ H5CgnsZone::H5CgnsZone(const std::string& name, Type type, const std::vector<int
 	impl->m_zoneBc = impl->createZoneBc();
 }
 
+H5CgnsZone::H5CgnsZone(const std::string& name, Type type, const std::vector<int>& size, H5CgnsBase* base) :
+	impl {new Impl {this}}
+{
+	impl->m_name = name;
+	impl->m_base = base;
+
+	impl->m_type = type;
+	impl->m_size = size;
+}
+
 H5CgnsZone::~H5CgnsZone()
 {
 	flush();

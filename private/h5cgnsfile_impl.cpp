@@ -114,6 +114,12 @@ H5CgnsBase* H5CgnsFile::Impl::createBase(int dimension)
 	return new H5CgnsBase(dimension, name, baseGroupId, m_file);
 }
 
+H5CgnsBase* H5CgnsFile::Impl::createMemoryOnlyBase(int dimension)
+{
+	auto name = baseName(dimension);
+	return new H5CgnsBase(dimension, name, m_file);
+}
+
 std::string H5CgnsFile::Impl::baseName(int dimension)
 {
 	if (dimension == 2) {return "iRIC";}

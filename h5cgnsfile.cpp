@@ -150,12 +150,22 @@ H5CgnsBase* H5CgnsFile::base()
 	return base(2);
 }
 
-H5CgnsBase* H5CgnsFile::base(int dim)
+H5CgnsBase* H5CgnsFile::base(int dim, bool forceCreate)
 {
 	auto it = impl->m_baseMap.find(dim);
 	if (it != impl->m_baseMap.end()) {return it->second;}
 
-	if (impl->m_mode == Mode::OpenReadOnly) {return nullptr;}
+	if (impl->m_mode == Mode::OpenReadOnly) {
+		if (! forceCreate) {
+			return nullptr;
+		}
+
+		auto newBase = impl->createMemoryOnlyBase(dim);
+		impl->m_bases.push_back(newBase);
+		impl->m_baseMap.insert({dim, newBase});
+
+		return newBase;
+	}
 
 	auto newBase = impl->createBase(dim);
 	impl->m_bases.push_back(newBase);
