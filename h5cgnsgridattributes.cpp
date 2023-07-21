@@ -52,6 +52,13 @@ int readDataArray(hid_t groupId, const std::string& name, const std::string& val
 
 	H5GroupCloser closer(gId);
 
+	std::unordered_set<std::string> tmp_names;
+
+	H5Util::getGroupNames(gId, &tmp_names);
+	if (tmp_names.find(valName) == tmp_names.end()) {
+		return  IRIC_DATA_NOT_FOUND;
+	}
+
 	_IRIC_LOGGER_TRACE_CALL_START("H5Util::readDataArrayValue");
 	ier = H5Util::readDataArrayValue(gId, valName, values);
 	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::readDataArrayValue", ier);
@@ -194,8 +201,18 @@ int H5CgnsGridAttributes::readFunctionalDimensionSize(const std::string& name, c
 
 	H5GroupCloser closer(gId);
 
+	std::unordered_set<std::string> tmp_names;
+
+	H5Util::getGroupNames(gId, &tmp_names);
+	auto dimDataName = dimensionDataName(dimname);
+	if (tmp_names.find(dimDataName) == tmp_names.end()) {
+		// data does not exist;
+		*size = 0;
+		return  IRIC_DATA_NOT_FOUND;
+	}
+
 	_IRIC_LOGGER_TRACE_CALL_START("H5Util::readDataArrayLength");
-	ier = H5Util::readDataArrayLength(gId, dimensionDataName(dimname), size);
+	ier = H5Util::readDataArrayLength(gId, dimDataName, size);
 	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::readDataArrayLength", ier);
 	RETURN_IF_ERR;
 

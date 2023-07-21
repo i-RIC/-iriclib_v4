@@ -74,6 +74,7 @@ H5CgnsZone::H5CgnsZone(const std::string& name, Type type, const std::vector<int
 
 	impl->m_type = type;
 	impl->m_size = size;
+	impl->m_groupId = -1;
 }
 
 H5CgnsZone::~H5CgnsZone()

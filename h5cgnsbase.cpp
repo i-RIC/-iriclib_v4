@@ -71,6 +71,7 @@ H5CgnsBase::H5CgnsBase(int dimension, const std::string &name, H5CgnsFile* file)
 	impl->m_dimension = dimension;
 	impl->m_name = name;
 	impl->m_file = file;
+	impl->m_groupId = -1;
 }
 
 H5CgnsBase::~H5CgnsBase()

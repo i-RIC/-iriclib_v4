@@ -96,6 +96,8 @@ H5CgnsZone::Impl::~Impl()
 	delete m_gridAttributes;
 	delete m_zoneBc;
 
+	if (m_groupId == -1) {return;}
+
 	_IRIC_LOGGER_TRACE_CALL_START("H5Gclose");
 	herr_t status = H5Gclose(m_groupId);
 	_IRIC_LOGGER_TRACE_CALL_END("H5Gclose");
