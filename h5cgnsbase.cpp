@@ -146,7 +146,7 @@ H5CgnsSolverInformation* H5CgnsBase::solverInformation() const
 
 int H5CgnsBase::writeErrorCode(int errorCode)
 {
-	int gId;
+	hid_t gId;
 
 	_IRIC_LOGGER_TRACE_CALL_START("H5Util::openOrCreateUserDefinedDataGroup");
 	int ier = H5Util::createUserDefinedDataGroup(impl->m_groupId, ERRORCODE_NAME, &gId);
@@ -168,7 +168,7 @@ int H5CgnsBase::writeErrorCode(int errorCode)
 
 int H5CgnsBase::readErrorCode(int* errorCode)
 {
-	int gId;
+	hid_t gId;
 
 	_IRIC_LOGGER_TRACE_CALL_START("H5Util::openOrCreateUserDefinedDataGroup");
 	int ier = H5Util::openGroup(impl->m_groupId, ERRORCODE_NAME, H5Util::userDefinedDataLabel(), &gId, true);
