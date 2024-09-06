@@ -218,7 +218,17 @@ int H5CgnsFile::deleteResult()
 		Poco::File newFile(tmpFName);
 		newFile.renameTo(impl->m_fileName);
 	}
-	return open();
+	int ier = open();
+
+	// delete output.dat if exists
+	Poco::Path path(impl->m_fileName);
+	auto output_data_path = path.parent().append("output.dat");
+	Poco::File outputFile(output_data_path);
+	if (outputFile.exists()) {
+		outputFile.remove();
+	}
+
+	return ier;
 }
 
 int H5CgnsFile::copyExceptSolution(H5CgnsFile* copyTarget)
