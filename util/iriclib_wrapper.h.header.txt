@@ -6,3 +6,4 @@
 #include "iriclib_global.h"
 #include "intarraycontainer.h"
 #include "realarraycontainer.h"
+#include "stringarraycontainer.h"

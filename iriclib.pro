@@ -123,6 +123,7 @@ HEADERS += error_macros.h \
            iricsolverlib_rect2d.h \
            iricsolverlib_tricell.h \
            realarraycontainer.h \
+           stringarraycontainer.h \
            vectorutil.h \
            internal/iric_h5cgnsfiles.h \
            internal/iric_logger.h \
@@ -228,6 +229,7 @@ SOURCES += h5attributecloser.cpp \
            iricsolverlib_rect2d.cpp \
            iricsolverlib_tricell.cpp \
            realarraycontainer.cpp \
+           stringarraycontainer.cpp \
            internal/iric_h5cgnsfiles.cpp \
            internal/iric_logger.cpp \
            internal/iric_outputerror.cpp \

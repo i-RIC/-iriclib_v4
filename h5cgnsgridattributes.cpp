@@ -56,7 +56,7 @@ int readDataArray(hid_t groupId, const std::string& name, const std::string& val
 
 	H5Util::getGroupNames(gId, &tmp_names);
 	if (tmp_names.find(valName) == tmp_names.end()) {
-		return  IRIC_DATA_NOT_FOUND;
+		return IRIC_DATA_NOT_FOUND;
 	}
 
 	_IRIC_LOGGER_TRACE_CALL_START("H5Util::readDataArrayValue");
@@ -67,8 +67,84 @@ int readDataArray(hid_t groupId, const std::string& name, const std::string& val
 	return IRIC_NO_ERROR;
 }
 
+int readDataArray(hid_t groupId, const std::string& name, const std::string& valName, std::vector<std::string>* values)
+{
+	hid_t gId;
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::openGroup");
+	int ier = H5Util::openGroup(groupId, name, H5Util::userDefinedDataLabel(), &gId);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::openGroup", ier);
+	RETURN_IF_ERR;
+
+	H5GroupCloser closer(gId);
+
+	std::unordered_set<std::string> tmp_names;
+
+	H5Util::getGroupNames(gId, &tmp_names);
+	if (tmp_names.find(valName) == tmp_names.end()) {
+		return IRIC_DATA_NOT_FOUND;
+	}
+
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::readDataArrayValue");
+	ier = H5Util::readDataArrayValue(gId, valName, values);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::readDataArrayValue", ier);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
+int readDimensions(hid_t groupId, const std::string& name, const std::string& valName, std::vector<size_t>* dims)
+{
+	hid_t gId;
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::openGroup");
+	int ier = H5Util::openGroup(groupId, name, H5Util::userDefinedDataLabel(), &gId);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::openGroup", ier);
+	RETURN_IF_ERR;
+
+	H5GroupCloser closer(gId);
+
+	std::unordered_set<std::string> tmp_names;
+
+	H5Util::getGroupNames(gId, &tmp_names);
+	if (tmp_names.find(valName) == tmp_names.end()) {
+		return IRIC_DATA_NOT_FOUND;
+	}
+
+	hid_t gId2;
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::openGroup");
+	ier = H5Util::openGroup(gId, valName, H5Util::dataArrayLabel(), &gId2);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::openGroup", ier);
+	RETURN_IF_ERR;
+
+	H5GroupCloser closer2(gId2);
+
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::readGroupValueDimensions");
+	ier = H5Util::readGroupValueDimensions(gId2, dims);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::readGroupValueDimensions", ier);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
 template <typename V>
 int createDataArray(hid_t groupId, const std::string& name, const std::string& valName, const std::vector<V>& values)
+{
+	hid_t gId;
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::createUserDefinedDataGroup");
+	int ier = H5Util::createUserDefinedDataGroup(groupId, name, &gId);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::createUserDefinedDataGroup", ier);
+	RETURN_IF_ERR;
+
+	H5GroupCloser closer(gId);
+
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::createDataArray");
+	ier = H5Util::createDataArray(gId, valName, values);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::createDataArray", ier);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
+int createDataArray(hid_t groupId, const std::string& name, const std::string& valName, const std::vector<std::string>& values)
 {
 	hid_t gId;
 	_IRIC_LOGGER_TRACE_CALL_START("H5Util::openOrCreateUserDefinedDataGroup");
@@ -86,19 +162,18 @@ int createDataArray(hid_t groupId, const std::string& name, const std::string& v
 	return IRIC_NO_ERROR;
 }
 
-template <typename V>
-int updateDataArray(hid_t groupId, const std::string& name, const std::string& valName, const std::vector<V>& values)
+int createDataArray(hid_t groupId, const std::string& name, const std::string& valName, const std::vector<char>& values, const std::vector<size_t>& dims)
 {
 	hid_t gId;
-	_IRIC_LOGGER_TRACE_CALL_START("H5Util::openOrCreateUserDefinedDataGroup");
-	int ier = H5Util::openGroup(groupId, name, H5Util::userDefinedDataLabel(), &gId);
-	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::openOrCreateUserDefinedDataGroup", ier);
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::createUserDefinedDataGroup");
+	int ier = H5Util::createUserDefinedDataGroup(groupId, name, &gId);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::createUserDefinedDataGroup", ier);
 	RETURN_IF_ERR;
 
 	H5GroupCloser closer(gId);
 
 	_IRIC_LOGGER_TRACE_CALL_START("H5Util::createDataArray");
-	ier = H5Util::createDataArray(gId, valName, values);
+	ier = H5Util::createDataArray(gId, valName, values, dims);
 	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::createDataArray", ier);
 	RETURN_IF_ERR;
 
@@ -106,7 +181,88 @@ int updateDataArray(hid_t groupId, const std::string& name, const std::string& v
 }
 
 template <typename V>
+int updateDataArray(hid_t groupId, const std::string& name, const std::string& valName, const std::vector<V>& values)
+{
+	hid_t gId;
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::openGroup");
+	int ier = H5Util::openGroup(groupId, name, H5Util::userDefinedDataLabel(), &gId);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::openGroup", ier);
+	RETURN_IF_ERR;
+
+	H5GroupCloser closer(gId);
+
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::updateOrCreateDataArray");
+	ier = H5Util::updateOrCreateDataArray(gId, valName, values);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::updateOrCreateDataArray", ier);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
+int updateDataArray(hid_t groupId, const std::string& name, const std::string& valName, const std::vector<char>& values, const std::vector<size_t>& dims)
+{
+	hid_t gId;
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::openGroup");
+	int ier = H5Util::openGroup(groupId, name, H5Util::userDefinedDataLabel(), &gId);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::openGroup", ier);
+	RETURN_IF_ERR;
+
+	H5GroupCloser closer(gId);
+
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::updateOrCreateDataArray");
+	ier = H5Util::updateOrCreateDataArray(gId, valName, values, dims);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::updateOrCreateDataArray", ier);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
+int updateDataArray(hid_t groupId, const std::string& name, const std::string& valName, const std::vector<std::string>& values)
+{
+	hid_t gId;
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::openGroup");
+	int ier = H5Util::openGroup(groupId, name, H5Util::userDefinedDataLabel(), &gId);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::openGroup", ier);
+	RETURN_IF_ERR;
+
+	H5GroupCloser closer(gId);
+
+	_IRIC_LOGGER_TRACE_CALL_START("H5Util::updateOrCreateDataArray");
+	ier = H5Util::updateOrCreateDataArray(gId, valName, values);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::updateOrCreateDataArray", ier);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
+template <typename V>
 int updateOrCreateDataArray(hid_t groupId, const std::string& name, const std::string& valName, const std::vector<V>& values, std::unordered_set<std::string>* names)
+{
+	if (names->find(name) == names->end()) {
+		int ier = createDataArray(groupId, name, valName, values);
+		RETURN_IF_ERR;
+		names->insert(name);
+	} else {
+		int ier = updateDataArray(groupId, name, valName, values);
+		RETURN_IF_ERR;
+	}
+	return IRIC_NO_ERROR;
+}
+
+int updateOrCreateDataArray(hid_t groupId, const std::string& name, const std::string& valName, const std::vector<char>& values, const std::vector<size_t>& dims, std::unordered_set<std::string>* names)
+{
+	if (names->find(name) == names->end()) {
+		int ier = createDataArray(groupId, name, valName, values, dims);
+		RETURN_IF_ERR;
+		names->insert(name);
+	} else {
+		int ier = updateDataArray(groupId, name, valName, values, dims);
+		RETURN_IF_ERR;
+	}
+	return IRIC_NO_ERROR;
+}
+
+int updateOrCreateDataArray(hid_t groupId, const std::string& name, const std::string& valName, const std::vector<std::string>& values, std::unordered_set<std::string>* names)
 {
 	if (names->find(name) == names->end()) {
 		int ier = createDataArray(groupId, name, valName, values);
@@ -127,7 +283,7 @@ H5CgnsGridAttributes::H5CgnsGridAttributes(hid_t groupId, H5CgnsZone* zone) :
 	impl->m_groupId = groupId;
 	impl->m_zone = zone;
 
-	H5Util::getGroupNames(impl->m_groupId, &(impl->m_names));
+	H5Util::getGroupNames(impl->m_groupId, &impl->m_names);
 }
 
 H5CgnsGridAttributes::~H5CgnsGridAttributes()
@@ -183,6 +339,27 @@ int H5CgnsGridAttributes::readValue(const std::string& name, std::vector<int>* v
 }
 
 int H5CgnsGridAttributes::readValue(const std::string& name, std::vector<double>* values) const
+{
+	CHECK_NAME_EXISTS;
+
+	return readDataArray(impl->m_groupId, name, "Value", values);
+}
+
+int H5CgnsGridAttributes::readDimensions(const std::string& name, std::vector<size_t>* dims) const
+{
+	CHECK_NAME_EXISTS;
+
+	return ::readDimensions(impl->m_groupId, name, "Value", dims);
+}
+
+int H5CgnsGridAttributes::readValue(const std::string& name, std::vector<char>* values) const
+{
+	CHECK_NAME_EXISTS;
+
+	return readDataArray(impl->m_groupId, name, "Value", values);
+}
+
+int H5CgnsGridAttributes::readValue(const std::string& name, std::vector<std::string>* values) const
 {
 	CHECK_NAME_EXISTS;
 
@@ -247,9 +424,30 @@ int H5CgnsGridAttributes::readFunctional(const std::string& name, int dimid, std
 	return readDataArray(impl->m_groupId, name, dimensionValueName(dimid), values);
 }
 
+int H5CgnsGridAttributes::readFunctionalDimensions(const std::string& name, int dimid, std::vector<size_t>* dims) const
+{
+	CHECK_NAME_EXISTS;
+
+	return ::readDimensions(impl->m_groupId, name, dimensionValueName(dimid), dims);
+}
+
+int H5CgnsGridAttributes::readFunctional(const std::string& name, int dimid, std::vector<char>* values) const
+{
+	CHECK_NAME_EXISTS;
+
+	return readDataArray(impl->m_groupId, name, dimensionValueName(dimid), values);
+}
+
+int H5CgnsGridAttributes::readFunctional(const std::string& name, int dimid, std::vector<std::string>* values) const
+{
+	CHECK_NAME_EXISTS;
+
+	return readDataArray(impl->m_groupId, name, dimensionValueName(dimid), values);
+}
+
 int H5CgnsGridAttributes::writeValue(const std::string& name, const std::vector<int>& values) const
 {
-	int ier = updateOrCreateDataArray(impl->m_groupId, name, "Value", values, &(impl->m_names));
+	int ier = updateOrCreateDataArray(impl->m_groupId, name, "Value", values, &impl->m_names);
 	RETURN_IF_ERR;
 
 	return IRIC_NO_ERROR;
@@ -257,7 +455,23 @@ int H5CgnsGridAttributes::writeValue(const std::string& name, const std::vector<
 
 int H5CgnsGridAttributes::writeValue(const std::string& name, const std::vector<double>& values) const
 {
-	int ier = updateOrCreateDataArray(impl->m_groupId, name, "Value", values, &(impl->m_names));
+	int ier = updateOrCreateDataArray(impl->m_groupId, name, "Value", values, &impl->m_names);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
+int H5CgnsGridAttributes::writeValue(const std::string& name, const std::vector<char>& values, const std::vector<size_t>& dims) const
+{
+	int ier = updateOrCreateDataArray(impl->m_groupId, name, "Value", values, dims, &impl->m_names);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
+int H5CgnsGridAttributes::writeValue(const std::string& name, const std::vector<std::string>& values) const
+{
+	int ier = updateOrCreateDataArray(impl->m_groupId, name, "Value", values, &impl->m_names);
 	RETURN_IF_ERR;
 
 	return IRIC_NO_ERROR;
@@ -267,7 +481,7 @@ int H5CgnsGridAttributes::writeFunctionalDimension(const std::string& name, cons
 {
 	if (values.size() == 0) {return IRIC_NO_ERROR;}
 
-	int ier = updateOrCreateDataArray(impl->m_groupId, name, dimensionDataName(dimname), values, &(impl->m_names));
+	int ier = updateOrCreateDataArray(impl->m_groupId, name, dimensionDataName(dimname), values, &impl->m_names);
 	RETURN_IF_ERR;
 
 	return IRIC_NO_ERROR;
@@ -277,7 +491,7 @@ int H5CgnsGridAttributes::writeFunctionalDimension(const std::string& name, cons
 {
 	if (values.size() == 0) {return IRIC_NO_ERROR;}
 
-	int ier = updateOrCreateDataArray(impl->m_groupId, name, dimensionDataName(dimname), values, &(impl->m_names));
+	int ier = updateOrCreateDataArray(impl->m_groupId, name, dimensionDataName(dimname), values, &impl->m_names);
 	RETURN_IF_ERR;
 
 	return IRIC_NO_ERROR;
@@ -285,7 +499,7 @@ int H5CgnsGridAttributes::writeFunctionalDimension(const std::string& name, cons
 
 int H5CgnsGridAttributes::writeFunctional(const std::string& name, int dimid, const std::vector<int>& values) const
 {
-	int ier = updateOrCreateDataArray(impl->m_groupId, name, dimensionValueName(dimid), values, &(impl->m_names));
+	int ier = updateOrCreateDataArray(impl->m_groupId, name, dimensionValueName(dimid), values, &impl->m_names);
 	RETURN_IF_ERR;
 
 	return IRIC_NO_ERROR;
@@ -293,7 +507,23 @@ int H5CgnsGridAttributes::writeFunctional(const std::string& name, int dimid, co
 
 int H5CgnsGridAttributes::writeFunctional(const std::string& name, int dimid, const std::vector<double>& values) const
 {
-	int ier = updateOrCreateDataArray(impl->m_groupId, name, dimensionValueName(dimid), values, &(impl->m_names));
+	int ier = updateOrCreateDataArray(impl->m_groupId, name, dimensionValueName(dimid), values, &impl->m_names);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
+int H5CgnsGridAttributes::writeFunctional(const std::string& name, int dimid, const std::vector<char>& values, const std::vector<size_t>& dims) const
+{
+	int ier = updateOrCreateDataArray(impl->m_groupId, name, dimensionValueName(dimid), values, dims, &impl->m_names);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
+int H5CgnsGridAttributes::writeFunctional(const std::string& name, int dimid, const std::vector<std::string>& values) const
+{
+	int ier = updateOrCreateDataArray(impl->m_groupId, name, dimensionValueName(dimid), values, &impl->m_names);
 	RETURN_IF_ERR;
 
 	return IRIC_NO_ERROR;

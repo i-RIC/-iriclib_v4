@@ -1,5 +1,6 @@
 %module iric
 %include "cstring.i"
+%include "std_string.i"
 %include "typemaps.i"
 
 %{
@@ -39,4 +40,23 @@ private:
 	std::vector<double>* m_value;
 };
 
+class StringArrayContainer
+{
+public:
+	StringArrayContainer();
+	~StringArrayContainer();
+
+	void allocate(int size, int maxlen);
+	int size() const;
+	int maxlen() const;
+
+	std::string value(int index) const;
+	void setValue(int index, const std::string& v);
+	char* pointer();
+
+private:
+	int m_size;
+	int m_maxlen;
+	std::vector<char>* m_value;
+};
 

@@ -175,6 +175,15 @@ int cg_iRIC_Read_Grid_Integer_Node_WithGridId(int fid, int gid, const char* name
 	return cg_iRIC_Read_Grid_Integer_Node_WithGridId(fid, gid, name, v_arr.pointer());
 }
 
+int cg_iRIC_Read_Grid_String_Node_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_NodeCount_WithGridId(fid, gid, &size);
+	ier = cg_iRIC_Read_Grid_StringMaxLen_Node_WithGridId(fid, gid, name, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_String_Node_WithGridId(fid, gid, name, v_arr.pointer());
+}
+
 int cg_iRIC_Read_Grid_Real_Cell_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Real_Cell_WithGridId(fid, gid, name, v_arr.pointer());
@@ -183,6 +192,15 @@ int cg_iRIC_Read_Grid_Real_Cell_WithGridId(int fid, int gid, const char* name, R
 int cg_iRIC_Read_Grid_Integer_Cell_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Integer_Cell_WithGridId(fid, gid, name, v_arr.pointer());
+}
+
+int cg_iRIC_Read_Grid_String_Cell_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_CellCount_WithGridId(fid, gid, &size);
+	ier = cg_iRIC_Read_Grid_StringMaxLen_Cell_WithGridId(fid, gid, name, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_String_Cell_WithGridId(fid, gid, name, v_arr.pointer());
 }
 
 int cg_iRIC_Read_Grid_Real_IFace_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr)
@@ -195,6 +213,15 @@ int cg_iRIC_Read_Grid_Integer_IFace_WithGridId(int fid, int gid, const char* nam
 	return cg_iRIC_Read_Grid_Integer_IFace_WithGridId(fid, gid, name, v_arr.pointer());
 }
 
+int cg_iRIC_Read_Grid_String_IFace_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_IFaceCount_WithGridId(fid, gid, &size);
+	ier = cg_iRIC_Read_Grid_StringMaxLen_IFace_WithGridId(fid, gid, name, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_String_IFace_WithGridId(fid, gid, name, v_arr.pointer());
+}
+
 int cg_iRIC_Read_Grid_Real_JFace_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Real_JFace_WithGridId(fid, gid, name, v_arr.pointer());
@@ -203,6 +230,15 @@ int cg_iRIC_Read_Grid_Real_JFace_WithGridId(int fid, int gid, const char* name, 
 int cg_iRIC_Read_Grid_Integer_JFace_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Integer_JFace_WithGridId(fid, gid, name, v_arr.pointer());
+}
+
+int cg_iRIC_Read_Grid_String_JFace_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_JFaceCount_WithGridId(fid, gid, &size);
+	ier = cg_iRIC_Read_Grid_StringMaxLen_JFace_WithGridId(fid, gid, name, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_String_JFace_WithGridId(fid, gid, name, v_arr.pointer());
 }
 
 int cg_iRIC_Read_Grid_FunctionalDimension_Integer_WithGridId(int fid, int gid, const char* name, const char* dimname, IntArrayContainer& v_arr)
@@ -230,6 +266,15 @@ int cg_iRIC_Read_Grid_Functional_Real_Node_WithGridId(int fid, int gid, const ch
 	return cg_iRIC_Read_Grid_Functional_Real_Node_WithGridId(fid, gid, name, dimid, v_arr.pointer());
 }
 
+int cg_iRIC_Read_Grid_Functional_String_Node_WithGridId(int fid, int gid, const char* name, int dimid, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_NodeCount_WithGridId(fid, gid, &size);
+	ier = cg_iRIC_Read_Grid_Functional_StringMaxLen_Node_WithGridId(fid, gid, name, dimid, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_Functional_String_Node_WithGridId(fid, gid, name, dimid, v_arr.pointer());
+}
+
 int cg_iRIC_Read_Grid_Functional_Integer_Cell_WithGridId(int fid, int gid, const char* name, int dimid, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Functional_Integer_Cell_WithGridId(fid, gid, name, dimid, v_arr.pointer());
@@ -238,6 +283,15 @@ int cg_iRIC_Read_Grid_Functional_Integer_Cell_WithGridId(int fid, int gid, const
 int cg_iRIC_Read_Grid_Functional_Real_Cell_WithGridId(int fid, int gid, const char* name, int dimid, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Functional_Real_Cell_WithGridId(fid, gid, name, dimid, v_arr.pointer());
+}
+
+int cg_iRIC_Read_Grid_Functional_String_Cell_WithGridId(int fid, int gid, const char* name, int dimid, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_CellCount_WithGridId(fid, gid, &size);
+	ier = cg_iRIC_Read_Grid_Functional_StringMaxLen_Cell_WithGridId(fid, gid, name, dimid, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_Functional_String_Cell_WithGridId(fid, gid, name, dimid, v_arr.pointer());
 }
 
 int cg_iRIC_Read_Grid_Functional_Integer_IFace_WithGridId(int fid, int gid, const char* name, int dimid, IntArrayContainer& v_arr)
@@ -250,6 +304,15 @@ int cg_iRIC_Read_Grid_Functional_Real_IFace_WithGridId(int fid, int gid, const c
 	return cg_iRIC_Read_Grid_Functional_Real_IFace_WithGridId(fid, gid, name, dimid, v_arr.pointer());
 }
 
+int cg_iRIC_Read_Grid_Functional_String_IFace_WithGridId(int fid, int gid, const char* name, int dimid, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_IFaceCount_WithGridId(fid, gid, &size);
+	ier = cg_iRIC_Read_Grid_Functional_StringMaxLen_IFace_WithGridId(fid, gid, name, dimid, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_Functional_String_IFace_WithGridId(fid, gid, name, dimid, v_arr.pointer());
+}
+
 int cg_iRIC_Read_Grid_Functional_Integer_JFace_WithGridId(int fid, int gid, const char* name, int dimid, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Functional_Integer_JFace_WithGridId(fid, gid, name, dimid, v_arr.pointer());
@@ -258,6 +321,15 @@ int cg_iRIC_Read_Grid_Functional_Integer_JFace_WithGridId(int fid, int gid, cons
 int cg_iRIC_Read_Grid_Functional_Real_JFace_WithGridId(int fid, int gid, const char* name, int dimid, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Functional_Real_JFace_WithGridId(fid, gid, name, dimid, v_arr.pointer());
+}
+
+int cg_iRIC_Read_Grid_Functional_String_JFace_WithGridId(int fid, int gid, const char* name, int dimid, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_JFaceCount_WithGridId(fid, gid, &size);
+	ier = cg_iRIC_Read_Grid_Functional_StringMaxLen_JFace_WithGridId(fid, gid, name, dimid, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_Functional_String_JFace_WithGridId(fid, gid, name, dimid, v_arr.pointer());
 }
 
 int cg_iRIC_Write_Grid1d_Coords_WithGridId(int fid, int isize, RealArrayContainer& x_arr, int* gid)
@@ -330,6 +402,11 @@ int cg_iRIC_Write_Grid_Integer_Node_WithGridId(int fid, int gid, const char* nam
 	return cg_iRIC_Write_Grid_Integer_Node_WithGridId(fid, gid, name, v_arr.pointer());
 }
 
+int cg_iRIC_Write_Grid_String_Node_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr)
+{
+	return cg_iRIC_Write_Grid_String_Node_WithGridId(fid, gid, name, v_arr.maxlen(), v_arr.pointer());
+}
+
 int cg_iRIC_Write_Grid_Real_Cell_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Write_Grid_Real_Cell_WithGridId(fid, gid, name, v_arr.pointer());
@@ -338,6 +415,11 @@ int cg_iRIC_Write_Grid_Real_Cell_WithGridId(int fid, int gid, const char* name, 
 int cg_iRIC_Write_Grid_Integer_Cell_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Write_Grid_Integer_Cell_WithGridId(fid, gid, name, v_arr.pointer());
+}
+
+int cg_iRIC_Write_Grid_String_Cell_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr)
+{
+	return cg_iRIC_Write_Grid_String_Cell_WithGridId(fid, gid, name, v_arr.maxlen(), v_arr.pointer());
 }
 
 int cg_iRIC_Write_Grid_Real_IFace_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr)
@@ -350,6 +432,11 @@ int cg_iRIC_Write_Grid_Integer_IFace_WithGridId(int fid, int gid, const char* na
 	return cg_iRIC_Write_Grid_Integer_IFace_WithGridId(fid, gid, name, v_arr.pointer());
 }
 
+int cg_iRIC_Write_Grid_String_IFace_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr)
+{
+	return cg_iRIC_Write_Grid_String_IFace_WithGridId(fid, gid, name, v_arr.maxlen(), v_arr.pointer());
+}
+
 int cg_iRIC_Write_Grid_Real_JFace_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Write_Grid_Real_JFace_WithGridId(fid, gid, name, v_arr.pointer());
@@ -358,6 +445,11 @@ int cg_iRIC_Write_Grid_Real_JFace_WithGridId(int fid, int gid, const char* name,
 int cg_iRIC_Write_Grid_Integer_JFace_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Write_Grid_Integer_JFace_WithGridId(fid, gid, name, v_arr.pointer());
+}
+
+int cg_iRIC_Write_Grid_String_JFace_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr)
+{
+	return cg_iRIC_Write_Grid_String_JFace_WithGridId(fid, gid, name, v_arr.maxlen(), v_arr.pointer());
 }
 
 
@@ -501,6 +593,15 @@ int cg_iRIC_Read_Grid_Integer_Node(int fid, const char* name, IntArrayContainer&
 	return cg_iRIC_Read_Grid_Integer_Node(fid, name, v_arr.pointer());
 }
 
+int cg_iRIC_Read_Grid_String_Node(int fid, const char* name, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_NodeCount(fid, &size);
+	ier = cg_iRIC_Read_Grid_StringMaxLen_Node(fid, name, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_String_Node(fid, name, v_arr.pointer());
+}
+
 int cg_iRIC_Read_Grid_Real_Cell(int fid, const char* name, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Real_Cell(fid, name, v_arr.pointer());
@@ -509,6 +610,15 @@ int cg_iRIC_Read_Grid_Real_Cell(int fid, const char* name, RealArrayContainer& v
 int cg_iRIC_Read_Grid_Integer_Cell(int fid, const char* name, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Integer_Cell(fid, name, v_arr.pointer());
+}
+
+int cg_iRIC_Read_Grid_String_Cell(int fid, const char* name, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_CellCount(fid, &size);
+	ier = cg_iRIC_Read_Grid_StringMaxLen_Cell(fid, name, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_String_Cell(fid, name, v_arr.pointer());
 }
 
 int cg_iRIC_Read_Grid_Real_IFace(int fid, const char* name, RealArrayContainer& v_arr)
@@ -521,6 +631,15 @@ int cg_iRIC_Read_Grid_Integer_IFace(int fid, const char* name, IntArrayContainer
 	return cg_iRIC_Read_Grid_Integer_IFace(fid, name, v_arr.pointer());
 }
 
+int cg_iRIC_Read_Grid_String_IFace(int fid, const char* name, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_IFaceCount(fid, &size);
+	ier = cg_iRIC_Read_Grid_StringMaxLen_IFace(fid, name, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_String_IFace(fid, name, v_arr.pointer());
+}
+
 int cg_iRIC_Read_Grid_Real_JFace(int fid, const char* name, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Real_JFace(fid, name, v_arr.pointer());
@@ -529,6 +648,15 @@ int cg_iRIC_Read_Grid_Real_JFace(int fid, const char* name, RealArrayContainer& 
 int cg_iRIC_Read_Grid_Integer_JFace(int fid, const char* name, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Integer_JFace(fid, name, v_arr.pointer());
+}
+
+int cg_iRIC_Read_Grid_String_JFace(int fid, const char* name, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_JFaceCount(fid, &size);
+	ier = cg_iRIC_Read_Grid_StringMaxLen_JFace(fid, name, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_String_JFace(fid, name, v_arr.pointer());
 }
 
 int cg_iRIC_Read_Grid_FunctionalDimension_Integer(int fid, const char* name, const char* dimname, IntArrayContainer& v_arr)
@@ -556,6 +684,15 @@ int cg_iRIC_Read_Grid_Functional_Real_Node(int fid, const char* name, int dimid,
 	return cg_iRIC_Read_Grid_Functional_Real_Node(fid, name, dimid, v_arr.pointer());
 }
 
+int cg_iRIC_Read_Grid_Functional_String_Node(int fid, const char* name, int dimid, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_NodeCount(fid, &size);
+	ier = cg_iRIC_Read_Grid_Functional_StringMaxLen_Node(fid, name, dimid, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_Functional_String_Node(fid, name, dimid, v_arr.pointer());
+}
+
 int cg_iRIC_Read_Grid_Functional_Integer_Cell(int fid, const char* name, int dimid, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Functional_Integer_Cell(fid, name, dimid, v_arr.pointer());
@@ -564,6 +701,15 @@ int cg_iRIC_Read_Grid_Functional_Integer_Cell(int fid, const char* name, int dim
 int cg_iRIC_Read_Grid_Functional_Real_Cell(int fid, const char* name, int dimid, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Functional_Real_Cell(fid, name, dimid, v_arr.pointer());
+}
+
+int cg_iRIC_Read_Grid_Functional_String_Cell(int fid, const char* name, int dimid, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_CellCount(fid, &size);
+	ier = cg_iRIC_Read_Grid_Functional_StringMaxLen_Cell(fid, name, dimid, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_Functional_String_Cell(fid, name, dimid, v_arr.pointer());
 }
 
 int cg_iRIC_Read_Grid_Functional_Integer_IFace(int fid, const char* name, int dimid, IntArrayContainer& v_arr)
@@ -576,6 +722,15 @@ int cg_iRIC_Read_Grid_Functional_Real_IFace(int fid, const char* name, int dimid
 	return cg_iRIC_Read_Grid_Functional_Real_IFace(fid, name, dimid, v_arr.pointer());
 }
 
+int cg_iRIC_Read_Grid_Functional_String_IFace(int fid, const char* name, int dimid, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_IFaceCount(fid, &size);
+	ier = cg_iRIC_Read_Grid_Functional_StringMaxLen_IFace(fid, name, dimid, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_Functional_String_IFace(fid, name, dimid, v_arr.pointer());
+}
+
 int cg_iRIC_Read_Grid_Functional_Integer_JFace(int fid, const char* name, int dimid, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Functional_Integer_JFace(fid, name, dimid, v_arr.pointer());
@@ -584,6 +739,15 @@ int cg_iRIC_Read_Grid_Functional_Integer_JFace(int fid, const char* name, int di
 int cg_iRIC_Read_Grid_Functional_Real_JFace(int fid, const char* name, int dimid, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Read_Grid_Functional_Real_JFace(fid, name, dimid, v_arr.pointer());
+}
+
+int cg_iRIC_Read_Grid_Functional_String_JFace(int fid, const char* name, int dimid, StringArrayContainer& v_arr)
+{
+	int size, maxlen, ier;
+	ier = cg_iRIC_Read_Grid_JFaceCount(fid, &size);
+	ier = cg_iRIC_Read_Grid_Functional_StringMaxLen_JFace(fid, name, dimid, &maxlen);
+	v_arr.allocate(size, maxlen);
+	return cg_iRIC_Read_Grid_Functional_String_JFace(fid, name, dimid, v_arr.pointer());
 }
 
 int cg_iRIC_Write_Grid1d_Coords(int fid, int isize, RealArrayContainer& x_arr)
@@ -656,6 +820,11 @@ int cg_iRIC_Write_Grid_Integer_Node(int fid, const char* name, IntArrayContainer
 	return cg_iRIC_Write_Grid_Integer_Node(fid, name, v_arr.pointer());
 }
 
+int cg_iRIC_Write_Grid_String_Node(int fid, const char* name, StringArrayContainer& v_arr)
+{
+	return cg_iRIC_Write_Grid_String_Node(fid, name, v_arr.maxlen(), v_arr.pointer());
+}
+
 int cg_iRIC_Write_Grid_Real_Cell(int fid, const char* name, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Write_Grid_Real_Cell(fid, name, v_arr.pointer());
@@ -664,6 +833,11 @@ int cg_iRIC_Write_Grid_Real_Cell(int fid, const char* name, RealArrayContainer& 
 int cg_iRIC_Write_Grid_Integer_Cell(int fid, const char* name, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Write_Grid_Integer_Cell(fid, name, v_arr.pointer());
+}
+
+int cg_iRIC_Write_Grid_String_Cell(int fid, const char* name, StringArrayContainer& v_arr)
+{
+	return cg_iRIC_Write_Grid_String_Cell(fid, name, v_arr.maxlen(), v_arr.pointer());
 }
 
 int cg_iRIC_Write_Grid_Real_IFace(int fid, const char* name, RealArrayContainer& v_arr)
@@ -676,6 +850,11 @@ int cg_iRIC_Write_Grid_Integer_IFace(int fid, const char* name, IntArrayContaine
 	return cg_iRIC_Write_Grid_Integer_IFace(fid, name, v_arr.pointer());
 }
 
+int cg_iRIC_Write_Grid_String_IFace(int fid, const char* name, StringArrayContainer& v_arr)
+{
+	return cg_iRIC_Write_Grid_String_IFace(fid, name, v_arr.maxlen(), v_arr.pointer());
+}
+
 int cg_iRIC_Write_Grid_Real_JFace(int fid, const char* name, RealArrayContainer& v_arr)
 {
 	return cg_iRIC_Write_Grid_Real_JFace(fid, name, v_arr.pointer());
@@ -684,6 +863,11 @@ int cg_iRIC_Write_Grid_Real_JFace(int fid, const char* name, RealArrayContainer&
 int cg_iRIC_Write_Grid_Integer_JFace(int fid, const char* name, IntArrayContainer& v_arr)
 {
 	return cg_iRIC_Write_Grid_Integer_JFace(fid, name, v_arr.pointer());
+}
+
+int cg_iRIC_Write_Grid_String_JFace(int fid, const char* name, StringArrayContainer& v_arr)
+{
+	return cg_iRIC_Write_Grid_String_JFace(fid, name, v_arr.maxlen(), v_arr.pointer());
 }
 
 int cg_iRIC_Read_Sol_Cell_Integer(int fid, int step, const char* name, IntArrayContainer& v_arr)

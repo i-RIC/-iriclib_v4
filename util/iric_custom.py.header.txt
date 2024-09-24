@@ -144,3 +144,52 @@ class RealArrayContainer(object):
 # Register RealArrayContainer in _iric:
 _iric.RealArrayContainer_swigregister(RealArrayContainer)
 
+class StringArrayContainer(object):
+    thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
+    __repr__ = _swig_repr
+
+    def __init__(self):
+        _iric.StringArrayContainer_swiginit(self, _iric.new_StringArrayContainer())
+    __swig_destroy__ = _iric.delete_StringArrayContainer
+
+    def allocate(self, size, maxlen):
+        return _iric.StringArrayContainer_allocate(self, size, maxlen)
+
+    def size(self):
+        return _iric.StringArrayContainer_size(self)
+
+    def maxlen(self):
+        return _iric.StringArrayContainer_maxlen(self)
+
+    def value(self, index):
+        return _iric.StringArrayContainer_value(self, index)
+
+    def setValue(self, index, v):
+        return _iric.StringArrayContainer_setValue(self, index, v)
+
+    def pointer(self):
+        return _iric.StringArrayContainer_pointer(self)
+
+    def get(self):
+        ret = list()
+        for i in range(self.size()):
+            ret.append(self.value(i))
+        return ret
+
+    def set(self, vals):
+        size = len(vals)
+        maxlen = 1
+        for v in vals:
+            l = len(v) + 1
+            if l > maxlen:
+                maxlen = l
+        
+        self.allocate(size, maxlen)
+
+        for i in range(size):
+            self.setValue(i, vals[i])
+
+# Register StringArrayContainer in _iric:
+_iric.StringArrayContainer_swigregister(StringArrayContainer)
+
+

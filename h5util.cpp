@@ -868,6 +868,27 @@ int H5Util::getDatasetNames(hid_t groupId, std::unordered_set<std::string>* name
 	return IRIC_NO_ERROR;
 }
 
+void H5Util::buildDimsAndBuffer(const std::vector<std::string>& value, std::vector<size_t>* dims, std::vector<char>* buffer)
+{
+	size_t maxLen = 0;
+	for (const auto& v : value) {
+		auto len = v.length();
+		if (len > maxLen) {maxLen = len;}
+	}
+	maxLen += 1; // for \0
+
+	dims->clear();
+	dims->push_back(value.size());
+	dims->push_back(maxLen);
+
+	buffer->assign(maxLen * value.size(), 0);
+
+	for (size_t i = 0; i < value.size(); ++i) {
+		const auto& v = value.at(i);
+		memcpy(buffer->data() + i * maxLen, v.data(), v.length());
+	}
+}
+
 int H5Util::createGroup(hid_t groupId, const std::string& name, hid_t* newGroup)
 {
 	_IRIC_LOGGER_TRACE_CALL_START("H5Pcreate");
@@ -1166,6 +1187,20 @@ int H5Util::createGroupWithValue(hid_t groupId, const std::string& name, const s
 	return IRIC_NO_ERROR;
 }
 
+int H5Util::createGroupWithValue(hid_t groupId, const std::string& name, const std::string& label, const std::vector<std::string>& value, hid_t* newGroup)
+{
+	std::vector<size_t> dims;
+	std::vector<char> buffer;
+	buildDimsAndBuffer(value, &dims, &buffer);
+
+	_IRIC_LOGGER_TRACE_CALL_START("createGroupWithValuesT");
+	int ier = createGroupWithValuesT(groupId, name, label, buffer, dims, "C1", H5T_STD_I8LE, H5T_NATIVE_INT8, newGroup);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("createGroupWithValuesT", ier);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
 int H5Util::createGroupWithValue(hid_t groupId, const std::string& name, const std::string& label, const std::vector<char>& value, const std::vector<hsize_t>& dims, hid_t* newGroup)
 {
 	_IRIC_LOGGER_TRACE_CALL_START("createGroupWithValuesT");
@@ -1247,6 +1282,16 @@ int H5Util::createDataArray(hid_t groupId, const std::string& name, const std::v
 }
 
 int H5Util::createDataArray(hid_t groupId, const std::string& name, const std::vector<double>& value)
+{
+	_IRIC_LOGGER_TRACE_CALL_START("createGroupWithValue");
+	int ier = createGroupWithValue(groupId, name, DATAARRAY_LABEL, value);
+	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("createGroupWithValue", ier);
+	RETURN_IF_ERR;
+
+	return IRIC_NO_ERROR;
+}
+
+int H5Util::createDataArray(hid_t groupId, const std::string& name, const std::vector<std::string>& value)
 {
 	_IRIC_LOGGER_TRACE_CALL_START("createGroupWithValue");
 	int ier = createGroupWithValue(groupId, name, DATAARRAY_LABEL, value);
@@ -1347,24 +1392,11 @@ int H5Util::updateOrCreateDataArray(hid_t groupId, const std::string& name, cons
 
 int H5Util::updateOrCreateDataArray(hid_t groupId, const std::string& name, const std::vector<std::string>& value, std::unordered_set<std::string>* names)
 {
-	size_t maxLen = 0;
-	for (const auto& v : value) {
-		auto len = v.length();
-		if (len > maxLen) {maxLen = len;}
-	}
-	maxLen += 1; // for \0
-
-	std::vector<hsize_t> dims;
-	dims.push_back(value.size());
-	dims.push_back(maxLen);
-
+	std::vector<size_t> dims;
 	std::vector<char> buffer;
-	buffer.assign(maxLen * value.size(), 0);
 
-	for (size_t i = 0; i < value.size(); ++i) {
-		const auto& v = value.at(i);
-		memcpy(buffer.data() + i * maxLen, v.data(), v.length());
-	}
+	buildDimsAndBuffer(value, &dims, &buffer);
+
 	_IRIC_LOGGER_TRACE_CALL_START("updateOrCreateDataArrayT");
 	int ier = updateOrCreateDataArrayT(groupId, name, buffer, dims, "C1", H5T_STD_I8LE, H5T_NATIVE_INT8, names);
 	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("updateOrCreateDataArrayT", ier);

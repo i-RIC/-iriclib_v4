@@ -69,6 +69,8 @@ def gen_swig_i():
                         continue
                     if 'StringLen' in line:
                         continue
+                    if 'StringMaxLen' in line:
+                        continue
                     if filename != 'iriclib_wrapper.h' and '_arr' in line:
                         continue
 
@@ -360,6 +362,8 @@ def gen_iric_py_content(fdef):
     rets = list()  # return values of the api
     arrays_in = dict()
     arrays_out = dict()
+    arrays_str_in = dict()
+    arrays_str_out = dict()
     w_rets = list()  # return values of the wrapper func
     w_args = list()  # args of the wrapper func
 
@@ -392,6 +396,20 @@ def gen_iric_py_content(fdef):
             else:
                 print("Invalid function name {0}".format(fname))
 
+        elif atype == "StringArrayContainer&":
+            if "_Read" in fname:
+                arrays_str_out[aname] = atype.replace('&', '')
+                w_args.append(aname.replace('_arr', ''))
+                rets.append(aname.replace('_arr', '') + ".get()")
+
+            elif "_Write" in fname:
+                arrays_str_in[aname] = atype.replace('&', '')
+                args.append(aname)
+                w_args.append(aname.replace('_arr', ''))
+
+            else:
+                print("Invalid function name {0}".format(fname))
+
         else:
             args.append(aname)
             w_args.append(aname)
@@ -406,8 +424,15 @@ def gen_iric_py_content(fdef):
         content += "\t" + n.replace('_arr', '') + " = " + t + "(" + n + ".size)\n"
         content += "\t" + n.replace('_arr', '') + ".set(" + n + ")\n"
 
+    for n, t in arrays_str_in.items():
+        content += "\t" + n.replace('_arr', '') + " = " + t + "()\n"
+        content += "\t" + n.replace('_arr', '') + ".set(" + n + ")\n"
+
     for n, t in arrays_out.items():
         content += "\t" + n.replace('_arr', '') + " = " + t + "(size)\n"
+
+    for n, t in arrays_str_out.items():
+        content += "\t" + n.replace('_arr', '') + " = " + t + "()\n"
 
     content += "\t" + ", ".join(w_rets) + " = _iric." + fname + "(" + ", ".join(w_args) + ")\n"
 
@@ -441,6 +466,8 @@ def gen_iric_py():
                     if 'RealSingle' in line:
                         continue
                     if 'StringLen' in line:
+                        continue
+                    if 'StringMaxLen' in line:
                         continue
                     if filename != 'iriclib_wrapper.h' and '_arr' in line:
                         continue

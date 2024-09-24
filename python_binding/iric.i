@@ -1,5 +1,6 @@
 %module iric
 %include "cstring.i"
+%include "std_string.i"
 %include "typemaps.i"
 
 %{
@@ -39,6 +40,25 @@ private:
 	std::vector<double>* m_value;
 };
 
+class StringArrayContainer
+{
+public:
+	StringArrayContainer();
+	~StringArrayContainer();
+
+	void allocate(int size, int maxlen);
+	int size() const;
+	int maxlen() const;
+
+	std::string value(int index) const;
+	void setValue(int index, const std::string& v);
+	char* pointer();
+
+private:
+	int m_size;
+	int m_maxlen;
+	std::vector<char>* m_value;
+};
 
 // from iriclib_bc.h
 void cg_iRIC_Read_BC_Count_WithGridId(int fid, int gid, const char* type, int* OUTPUT);
@@ -277,23 +297,31 @@ int cg_iRIC_Read_Grid_TriangleElements_WithGridId(int fid, int gid, IntArrayCont
 int cg_iRIC_Read_Grid_LineElements_WithGridId(int fid, int gid, IntArrayContainer& id_arr);
 int cg_iRIC_Read_Grid_Real_Node_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Integer_Node_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_String_Node_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Real_Cell_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Integer_Cell_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_String_Cell_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Real_IFace_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Integer_IFace_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_String_IFace_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Real_JFace_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Integer_JFace_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_String_JFace_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_FunctionalDimension_Integer_WithGridId(int fid, int gid, const char* name, const char* dimname, IntArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_FunctionalDimension_Real_WithGridId(int fid, int gid, const char* name, const char* dimname, RealArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_FunctionalTime_WithGridId(int fid, int gid, const char* name, RealArrayContainer& time_arr);
 int cg_iRIC_Read_Grid_Functional_Integer_Node_WithGridId(int fid, int gid, const char* name, int dimid, IntArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Real_Node_WithGridId(int fid, int gid, const char* name, int dimid, RealArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_Functional_String_Node_WithGridId(int fid, int gid, const char* name, int dimid, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Integer_Cell_WithGridId(int fid, int gid, const char* name, int dimid, IntArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Real_Cell_WithGridId(int fid, int gid, const char* name, int dimid, RealArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_Functional_String_Cell_WithGridId(int fid, int gid, const char* name, int dimid, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Integer_IFace_WithGridId(int fid, int gid, const char* name, int dimid, IntArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Real_IFace_WithGridId(int fid, int gid, const char* name, int dimid, RealArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_Functional_String_IFace_WithGridId(int fid, int gid, const char* name, int dimid, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Integer_JFace_WithGridId(int fid, int gid, const char* name, int dimid, IntArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Real_JFace_WithGridId(int fid, int gid, const char* name, int dimid, RealArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_Functional_String_JFace_WithGridId(int fid, int gid, const char* name, int dimid, StringArrayContainer& v_arr);
 int cg_iRIC_Write_Grid1d_Coords_WithGridId(int fid, int isize, RealArrayContainer& x_arr, int* OUTPUT);
 int cg_iRIC_Write_Grid2d_Coords_WithGridId(int fid, int isize, int jsize, RealArrayContainer& x_arr, RealArrayContainer& y_arr, int* OUTPUT);
 int cg_iRIC_Write_Grid3d_Coords_WithGridId(int fid, int isize, int jsize, int ksize, RealArrayContainer& x_arr, RealArrayContainer& y_arr, RealArrayContainer& z_arr, int* OUTPUT);
@@ -308,12 +336,16 @@ int cg_iRIC_Write_NamedGrid2d_Unst_Lines_WithGridId(int fid, const char* name, i
 int cg_iRIC_Write_NamedGrid3d_Unst_Lines_WithGridId(int fid, const char* name, int psize, RealArrayContainer& x_arr, RealArrayContainer& y_arr, RealArrayContainer& z_arr, int csize, IntArrayContainer& idx_arr, int* OUTPUT);
 int cg_iRIC_Write_Grid_Real_Node_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Integer_Node_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Write_Grid_String_Node_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Real_Cell_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Integer_Cell_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Write_Grid_String_Cell_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Real_IFace_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Integer_IFace_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Write_Grid_String_IFace_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Real_JFace_WithGridId(int fid, int gid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Integer_JFace_WithGridId(int fid, int gid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Write_Grid_String_JFace_WithGridId(int fid, int gid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid2d_InterpolateWithCell(int grid_handle, double x, double y, int cellId, IntArrayContainer& nodeids_arr, RealArrayContainer& weights_arr);
 int cg_iRIC_Read_Complex_Functional(int fid, const char* groupname, int num, const char* name, RealArrayContainer& x_arr, RealArrayContainer& y_arr);
 int cg_iRIC_Read_Complex_FunctionalWithName(int fid, const char* groupname, int num, const char* name, const char* paramname, RealArrayContainer& v_arr);
@@ -340,23 +372,31 @@ int cg_iRIC_Read_Grid_TriangleElements(int fid, IntArrayContainer& id_arr);
 int cg_iRIC_Read_Grid_LineElements(int fid, IntArrayContainer& id_arr);
 int cg_iRIC_Read_Grid_Real_Node(int fid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Integer_Node(int fid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_String_Node(int fid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Real_Cell(int fid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Integer_Cell(int fid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_String_Cell(int fid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Real_IFace(int fid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Integer_IFace(int fid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_String_IFace(int fid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Real_JFace(int fid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Integer_JFace(int fid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_String_JFace(int fid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_FunctionalDimension_Integer(int fid, const char* name, const char* dimname, IntArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_FunctionalDimension_Real(int fid, const char* name, const char* dimname, RealArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_FunctionalTime(int fid, const char* name, RealArrayContainer& time_arr);
 int cg_iRIC_Read_Grid_Functional_Integer_Node(int fid, const char* name, int dimid, IntArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Real_Node(int fid, const char* name, int dimid, RealArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_Functional_String_Node(int fid, const char* name, int dimid, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Integer_Cell(int fid, const char* name, int dimid, IntArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Real_Cell(int fid, const char* name, int dimid, RealArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_Functional_String_Cell(int fid, const char* name, int dimid, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Integer_IFace(int fid, const char* name, int dimid, IntArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Real_IFace(int fid, const char* name, int dimid, RealArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_Functional_String_IFace(int fid, const char* name, int dimid, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Integer_JFace(int fid, const char* name, int dimid, IntArrayContainer& v_arr);
 int cg_iRIC_Read_Grid_Functional_Real_JFace(int fid, const char* name, int dimid, RealArrayContainer& v_arr);
+int cg_iRIC_Read_Grid_Functional_String_JFace(int fid, const char* name, int dimid, StringArrayContainer& v_arr);
 int cg_iRIC_Write_Grid1d_Coords(int fid, int isize, RealArrayContainer& x_arr);
 int cg_iRIC_Write_Grid2d_Coords(int fid, int isize, int jsize, RealArrayContainer& x_arr, RealArrayContainer& y_arr);
 int cg_iRIC_Write_Grid3d_Coords(int fid, int isize, int jsize, int ksize, RealArrayContainer& x_arr, RealArrayContainer& y_arr, RealArrayContainer& z_arr);
@@ -371,12 +411,16 @@ int cg_iRIC_Write_NamedGrid2d_Unst_Lines(int fid, const char* name, int psize, R
 int cg_iRIC_Write_NamedGrid3d_Unst_Lines(int fid, const char* name, int psize, RealArrayContainer& x_arr, RealArrayContainer& y_arr, RealArrayContainer& z_arr, int csize, IntArrayContainer& idx_arr);
 int cg_iRIC_Write_Grid_Real_Node(int fid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Integer_Node(int fid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Write_Grid_String_Node(int fid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Real_Cell(int fid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Integer_Cell(int fid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Write_Grid_String_Cell(int fid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Real_IFace(int fid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Integer_IFace(int fid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Write_Grid_String_IFace(int fid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Real_JFace(int fid, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Write_Grid_Integer_JFace(int fid, const char* name, IntArrayContainer& v_arr);
+int cg_iRIC_Write_Grid_String_JFace(int fid, const char* name, StringArrayContainer& v_arr);
 int cg_iRIC_Read_Sol_Cell_Integer(int fid, int step, const char* name, IntArrayContainer& v_arr);
 int cg_iRIC_Read_Sol_Cell_Real(int fid, int step, const char* name, RealArrayContainer& v_arr);
 int cg_iRIC_Write_Sol_Cell_Integer(int fid, const char* name, IntArrayContainer& v_arr);

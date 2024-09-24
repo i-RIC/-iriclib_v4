@@ -349,6 +349,41 @@ int cg_iRIC_Read_Grid_Integer_Node_WithGridId(int fid, int gid, const char* name
 	return IRIC_NO_ERROR;
 }
 
+int cg_iRIC_Read_Grid_StringMaxLen_Node_WithGridId(int fid, int gid, const char* name, int* smsize)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	ier = zone->gridAttributes()->readDimensions(name, &dims);
+	RETURN_IF_ERR;
+
+	*smsize = static_cast<int> (dims.at(1));
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_String_Node_WithGridId(int fid, int gid, const char* name, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<char> buffer;
+	zone->gridAttributes()->readValue(name, &buffer);
+
+	_vectorToPointerT(buffer, v_arr);
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
 int cg_iRIC_Read_Grid_Real_Cell_WithGridId(int fid, int gid, const char* name, double* v_arr)
 {
 	_IRIC_LOGGER_TRACE_ENTER();
@@ -378,6 +413,41 @@ int cg_iRIC_Read_Grid_Integer_Cell_WithGridId(int fid, int gid, const char* name
 	std::vector<int> buffer;
 	ier = zone->gridAttributes()->readValue(name, &buffer);
 	RETURN_IF_ERR;
+
+	_vectorToPointerT(buffer, v_arr);
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_StringMaxLen_Cell_WithGridId(int fid, int gid, const char* name, int* smsize)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	ier = zone->gridAttributes()->readDimensions(name, &dims);
+	RETURN_IF_ERR;
+
+	*smsize = static_cast<int> (dims.at(1));
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_String_Cell_WithGridId(int fid, int gid, const char* name, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<char> buffer;
+	zone->gridAttributes()->readValue(name, &buffer);
 
 	_vectorToPointerT(buffer, v_arr);
 
@@ -421,6 +491,41 @@ int cg_iRIC_Read_Grid_Integer_IFace_WithGridId(int fid, int gid, const char* nam
 	return IRIC_NO_ERROR;
 }
 
+int cg_iRIC_Read_Grid_StringMaxLen_IFace_WithGridId(int fid, int gid, const char* name, int* smsize)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	ier = zone->gridAttributes()->readDimensions(name, &dims);
+	RETURN_IF_ERR;
+
+	*smsize = static_cast<int> (dims.at(1));
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_String_IFace_WithGridId(int fid, int gid, const char* name, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<char> buffer;
+	zone->gridAttributes()->readValue(name, &buffer);
+
+	_vectorToPointerT(buffer, v_arr);
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
 int cg_iRIC_Read_Grid_Real_JFace_WithGridId(int fid, int gid, const char* name, double* v_arr)
 {
 	_IRIC_LOGGER_TRACE_ENTER();
@@ -450,6 +555,41 @@ int cg_iRIC_Read_Grid_Integer_JFace_WithGridId(int fid, int gid, const char* nam
 	std::vector<int> buffer;
 	ier = zone->gridAttributes()->readValue(name, &buffer);
 	RETURN_IF_ERR;
+
+	_vectorToPointerT(buffer, v_arr);
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_StringMaxLen_JFace_WithGridId(int fid, int gid, const char* name, int* smsize)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	ier = zone->gridAttributes()->readDimensions(name, &dims);
+	RETURN_IF_ERR;
+
+	*smsize = static_cast<int> (dims.at(1));
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_String_JFace_WithGridId(int fid, int gid, const char* name, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<char> buffer;
+	zone->gridAttributes()->readValue(name, &buffer);
 
 	_vectorToPointerT(buffer, v_arr);
 
@@ -554,6 +694,41 @@ int cg_iRIC_Read_Grid_Functional_Real_Node_WithGridId(int fid, int gid, const ch
 	return IRIC_NO_ERROR;
 }
 
+int cg_iRIC_Read_Grid_Functional_StringMaxLen_Node_WithGridId(int fid, int gid, const char* name, int dimid, int* smsize)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	ier = zone->gridAttributes()->readFunctionalDimensions(name, dimid, &dims);
+	RETURN_IF_ERR;
+
+	*smsize = static_cast<int> (dims.at(1));
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_Functional_String_Node_WithGridId(int fid, int gid, const char* name, int dimid, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<char> buffer;
+	zone->gridAttributes()->readFunctional(name, dimid, &buffer);
+
+	_vectorToPointerT(buffer, v_arr);
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
 int cg_iRIC_Read_Grid_Functional_Integer_Cell_WithGridId(int fid, int gid, const char* name, int dimid, int* v_arr)
 {
 	_IRIC_LOGGER_TRACE_ENTER();
@@ -583,6 +758,41 @@ int cg_iRIC_Read_Grid_Functional_Real_Cell_WithGridId(int fid, int gid, const ch
 	std::vector<double> buffer;
 	ier = zone->gridAttributes()->readFunctional(name, dimid, &buffer);
 	RETURN_IF_ERR;
+
+	_vectorToPointerT(buffer, v_arr);
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_Functional_StringMaxLen_Cell_WithGridId(int fid, int gid, const char* name, int dimid, int* smsize)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	ier = zone->gridAttributes()->readFunctionalDimensions(name, dimid, &dims);
+	RETURN_IF_ERR;
+
+	*smsize = static_cast<int> (dims.at(1));
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_Functional_String_Cell_WithGridId(int fid, int gid, const char* name, int dimid, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<char> buffer;
+	zone->gridAttributes()->readFunctional(name, dimid, &buffer);
 
 	_vectorToPointerT(buffer, v_arr);
 
@@ -626,6 +836,41 @@ int cg_iRIC_Read_Grid_Functional_Real_IFace_WithGridId(int fid, int gid, const c
 	return IRIC_NO_ERROR;
 }
 
+int cg_iRIC_Read_Grid_Functional_StringMaxLen_IFace_WithGridId(int fid, int gid, const char* name, int dimid, int* smsize)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	ier = zone->gridAttributes()->readFunctionalDimensions(name, dimid, &dims);
+	RETURN_IF_ERR;
+
+	*smsize = static_cast<int> (dims.at(1));
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_Functional_String_IFace_WithGridId(int fid, int gid, const char* name, int dimid, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<char> buffer;
+	zone->gridAttributes()->readFunctional(name, dimid, &buffer);
+
+	_vectorToPointerT(buffer, v_arr);
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
 int cg_iRIC_Read_Grid_Functional_Integer_JFace_WithGridId(int fid, int gid, const char* name, int dimid, int* v_arr)
 {
 	_IRIC_LOGGER_TRACE_ENTER();
@@ -655,6 +900,41 @@ int cg_iRIC_Read_Grid_Functional_Real_JFace_WithGridId(int fid, int gid, const c
 	std::vector<double> buffer;
 	ier = zone->gridAttributes()->readFunctional(name, dimid, &buffer);
 	RETURN_IF_ERR;
+
+	_vectorToPointerT(buffer, v_arr);
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_Functional_StringMaxLen_JFace_WithGridId(int fid, int gid, const char* name, int dimid, int* smsize)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	ier = zone->gridAttributes()->readFunctionalDimensions(name, dimid, &dims);
+	RETURN_IF_ERR;
+
+	*smsize = static_cast<int> (dims.at(1));
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Read_Grid_Functional_String_JFace_WithGridId(int fid, int gid, const char* name, int dimid, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<char> buffer;
+	zone->gridAttributes()->readFunctional(name, dimid, &buffer);
 
 	_vectorToPointerT(buffer, v_arr);
 
@@ -1058,6 +1338,29 @@ int cg_iRIC_Write_Grid_Integer_Node_WithGridId(int fid, int gid, const char* nam
 	return IRIC_NO_ERROR;
 }
 
+int cg_iRIC_Write_Grid_String_Node_WithGridId(int fid, int gid, const char* name, int maxlen, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	dims.push_back(zone->nodeCount());
+	dims.push_back(maxlen);
+	size_t size = zone->nodeCount() * maxlen;
+
+	std::vector<char> buffer(size);
+	_pointerToVectorT(v_arr, &buffer);
+
+	ier = zone->gridAttributes()->writeValue(name, buffer, dims);
+	RETURN_IF_ERR;
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
 int cg_iRIC_Write_Grid_Real_Cell_WithGridId(int fid, int gid, const char* name, double* v_arr)
 {
 	_IRIC_LOGGER_TRACE_ENTER();
@@ -1094,7 +1397,30 @@ int cg_iRIC_Write_Grid_Integer_Cell_WithGridId(int fid, int gid, const char* nam
 	return IRIC_NO_ERROR;
 }
 
-int IRICLIBDLL cg_iRIC_Write_Grid_Real_IFace_WithGridId(int fid, int gid, const char* name, double* v_arr)
+int cg_iRIC_Write_Grid_String_Cell_WithGridId(int fid, int gid, const char* name, int maxlen, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	dims.push_back(zone->cellCount());
+	dims.push_back(maxlen);
+	size_t size = zone->cellCount() * maxlen;
+
+	std::vector<char> buffer(size);
+	_pointerToVectorT(v_arr, &buffer);
+
+	ier = zone->gridAttributes()->writeValue(name, buffer, dims);
+	RETURN_IF_ERR;
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Write_Grid_Real_IFace_WithGridId(int fid, int gid, const char* name, double* v_arr)
 {
 	_IRIC_LOGGER_TRACE_ENTER();
 
@@ -1112,7 +1438,7 @@ int IRICLIBDLL cg_iRIC_Write_Grid_Real_IFace_WithGridId(int fid, int gid, const 
 	return IRIC_NO_ERROR;
 }
 
-int IRICLIBDLL cg_iRIC_Write_Grid_Integer_IFace_WithGridId(int fid, int gid, const char* name, int* v_arr)
+int cg_iRIC_Write_Grid_Integer_IFace_WithGridId(int fid, int gid, const char* name, int* v_arr)
 {
 	_IRIC_LOGGER_TRACE_ENTER();
 
@@ -1130,7 +1456,30 @@ int IRICLIBDLL cg_iRIC_Write_Grid_Integer_IFace_WithGridId(int fid, int gid, con
 	return IRIC_NO_ERROR;
 }
 
-int IRICLIBDLL cg_iRIC_Write_Grid_Real_JFace_WithGridId(int fid, int gid, const char* name, double* v_arr)
+int cg_iRIC_Write_Grid_String_IFace_WithGridId(int fid, int gid, const char* name, int maxlen, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	dims.push_back(zone->iFaceCount());
+	dims.push_back(maxlen);
+	size_t size = zone->iFaceCount() * maxlen;
+
+	std::vector<char> buffer(size);
+	_pointerToVectorT(v_arr, &buffer);
+
+	ier = zone->gridAttributes()->writeValue(name, buffer, dims);
+	RETURN_IF_ERR;
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Write_Grid_Real_JFace_WithGridId(int fid, int gid, const char* name, double* v_arr)
 {
 	_IRIC_LOGGER_TRACE_ENTER();
 
@@ -1148,7 +1497,7 @@ int IRICLIBDLL cg_iRIC_Write_Grid_Real_JFace_WithGridId(int fid, int gid, const 
 	return IRIC_NO_ERROR;
 }
 
-int IRICLIBDLL cg_iRIC_Write_Grid_Integer_JFace_WithGridId(int fid, int gid, const char* name, int* v_arr)
+int cg_iRIC_Write_Grid_Integer_JFace_WithGridId(int fid, int gid, const char* name, int* v_arr)
 {
 	_IRIC_LOGGER_TRACE_ENTER();
 
@@ -1160,6 +1509,29 @@ int IRICLIBDLL cg_iRIC_Write_Grid_Integer_JFace_WithGridId(int fid, int gid, con
 	_pointerToVectorT(v_arr, &buffer);
 
 	ier = zone->gridAttributes()->writeValue(name, buffer);
+	RETURN_IF_ERR;
+
+	_IRIC_LOGGER_TRACE_LEAVE();
+	return IRIC_NO_ERROR;
+}
+
+int cg_iRIC_Write_Grid_String_JFace_WithGridId(int fid, int gid, const char* name, int maxlen, char* v_arr)
+{
+	_IRIC_LOGGER_TRACE_ENTER();
+
+	H5CgnsZone* zone;
+	int ier = _iric_get_zone(fid, gid, &zone, __func__);
+	RETURN_IF_ERR;
+
+	std::vector<size_t> dims;
+	dims.push_back(zone->jFaceCount());
+	dims.push_back(maxlen);
+	size_t size = zone->jFaceCount() * maxlen;
+
+	std::vector<char> buffer(size);
+	_pointerToVectorT(v_arr, &buffer);
+
+	ier = zone->gridAttributes()->writeValue(name, buffer, dims);
 	RETURN_IF_ERR;
 
 	_IRIC_LOGGER_TRACE_LEAVE();

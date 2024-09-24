@@ -40,10 +40,15 @@ def gen_wrapper_header_line(fdef):
         a = a.strip()
         frags = a.split(' ')
         aname = frags.pop()
+
+        if 'maxlen' in a:
+            continue
+
         if '_arr' in aname:
             a2 = a
             a2 = a2.replace('int* ', 'IntArrayContainer& ')
             a2 = a2.replace('double* ', 'RealArrayContainer& ')
+            a2 = a2.replace('char* ', 'StringArrayContainer& ')
 
             args.append(a2)
         else:
@@ -98,25 +103,34 @@ def gen_wrapper_source_content(fdef):
     arglist = args.split(',')
     iargs = list()
     oargs = list()
+
+    m1 = re.search('cg_iRIC_Write_(.+_|)Functional', fname)
+    m2 = re.search('cg_iRIC_Write_(.+_|)FunctionalWithName', fname)
+    m3 = re.search('cg_iRIC_Write_BC_Indices', fname)
+    m4 = re.search('cg_iRIC_Write_Sol_Particle_Pos', fname)
+    m5 = re.search(r'cg_iRIC_Write_Grid_String_(.*?)(\(|_WithGridId\()', fdef)
+
     for a in arglist:
         a = a.strip()
         frags = a.split(' ')
         aname = frags.pop()
-
-        m1 = re.search('cg_iRIC_Write_(.+_|)Functional', fname)
-        m2 = re.search('cg_iRIC_Write_(.+_|)FunctionalWithName', fname)
-        m3 = re.search('cg_iRIC_Write_BC_Indices', fname)
-        m4 = re.search('cg_iRIC_Write_Sol_Particle_Pos', fname)
 
         if (m1 or m2 or m3) and aname == 'length':
             continue
         if (m4) and aname == 'count':
             continue
 
+        if 'maxlen' in a:
+            continue
+
         if '_arr' in aname:
+            if m5:
+                oargs.append('v_arr.maxlen()')
+
             a2 = a
             a2 = a2.replace('int* ', 'IntArrayContainer& ')
             a2 = a2.replace('double* ', 'RealArrayContainer& ')
+            a2 = a2.replace('char* ', 'StringArrayContainer& ')
 
             iargs.append(a2)
 
@@ -139,6 +153,26 @@ def gen_wrapper_source_content(fdef):
 
     content = retval + " " + fname + "(" + ", ".join(iargs) + ")\n"
     content += "{\n"
+
+    m_str = re.search(r'cg_iRIC_Read_Grid(|_Functional)_String_(.*?)(\(|_WithGridId\()', fdef)
+    if not m_str is None:
+        [functional, pos, withgridid] = m_str.groups()
+        # print(groups)
+        content += "\tint size, maxlen, ier;\n"
+        content += "\tier = cg_iRIC_Read_Grid_" + pos + 'Count' + withgridid
+        content += 'fid'
+        if withgridid == '_WithGridId(':
+            content += ', gid'
+        content += ', &size);\n'
+        content += "\tier = cg_iRIC_Read_Grid" + functional + "_StringMaxLen_" + pos + withgridid
+        content += 'fid'
+        if withgridid == '_WithGridId(':
+            content += ', gid'
+        content += ', name'
+        if functional != '':
+            content += ', dimid'
+        content += ', &maxlen);\n'
+        content += '\tv_arr.allocate(size, maxlen);\n'
 
     if 'cg_iRIC_Write_BC_Indices' in fname and not ('cg_iRIC_Write_BC_Indices2' in fname):
         fname = fname.replace('cg_iRIC_Write_BC_Indices', 'cg_iRIC_Write_BC_Indices2')
