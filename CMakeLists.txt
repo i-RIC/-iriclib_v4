@@ -251,6 +251,8 @@ SET(iriclib_SOURCES
   public/h5cgnspolydatasolution_groupreader.h
   realarraycontainer.cpp
   realarraycontainer.h
+  stringarraycontainer.cpp
+  stringarraycontainer.h
   vectorutil.h
 )
 
