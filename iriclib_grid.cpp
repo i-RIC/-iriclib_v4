@@ -17,6 +17,16 @@
 
 using namespace iRICLib;
 
+namespace {
+
+int dimOr1(int dim) {
+	if (dim == 0) {return 1;}
+
+	return dim;
+}
+
+} // namespace
+
 int cg_iRIC_Read_Grid2d_Str_Size_WithGridId(int fid, int gid, int* isize, int* jsize)
 {
 	_IRIC_LOGGER_TRACE_ENTER();
@@ -953,7 +963,7 @@ int cg_iRIC_Write_Grid1d_Coords_WithGridId(int fid, int isize, double* x_arr, in
 	auto base = file->base(1);
 	std::vector<int> size;
 	size.push_back(isize);
-	size.push_back(isize - 1);
+	size.push_back(dimOr1(isize - 1));
 	auto zone = base->createDefaultZone(H5CgnsZone::Type::Structured, size);
 
 	std::vector<double> coords(isize);
@@ -980,8 +990,8 @@ int cg_iRIC_Write_Grid2d_Coords_WithGridId(int fid, int isize, int jsize, double
 	std::vector<int> size;
 	size.push_back(isize);
 	size.push_back(jsize);
-	size.push_back(isize - 1);
-	size.push_back(jsize - 1);
+	size.push_back(dimOr1(isize - 1));
+	size.push_back(dimOr1(jsize - 1));
 	auto zone = base->createDefaultZone(H5CgnsZone::Type::Structured, size);
 
 	auto totalSize = isize * jsize;
@@ -1015,9 +1025,9 @@ int cg_iRIC_Write_Grid3d_Coords_WithGridId(int fid, int isize, int jsize, int ks
 	size.push_back(isize);
 	size.push_back(jsize);
 	size.push_back(ksize);
-	size.push_back(isize - 1);
-	size.push_back(jsize - 1);
-	size.push_back(ksize - 1);
+	size.push_back(dimOr1(isize - 1));
+	size.push_back(dimOr1(jsize - 1));
+	size.push_back(dimOr1(ksize - 1));
 	auto zone = base->createDefaultZone(H5CgnsZone::Type::Structured, size);
 
 	auto totalSize = isize * jsize * ksize;
@@ -1051,7 +1061,7 @@ int cg_iRIC_Write_NamedGrid1d_Coords_WithGridId(int fid, const char* name, int i
 	auto base = file->base(1);
 	std::vector<int> size;
 	size.push_back(isize);
-	size.push_back(isize - 1);
+	size.push_back(dimOr1(isize - 1));
 	auto zone = base->createZone(name, H5CgnsZone::Type::Structured, size);
 
 	std::vector<double> coords(isize);
@@ -1078,8 +1088,8 @@ int cg_iRIC_Write_NamedGrid2d_Coords_WithGridId(int fid, const char* name, int i
 	std::vector<int> size;
 	size.push_back(isize);
 	size.push_back(jsize);
-	size.push_back(isize - 1);
-	size.push_back(jsize - 1);
+	size.push_back(dimOr1(isize - 1));
+	size.push_back(dimOr1(jsize - 1));
 	auto zone = base->createZone(name,  H5CgnsZone::Type::Structured, size);
 
 	auto totalSize = isize * jsize;
@@ -1113,9 +1123,9 @@ int cg_iRIC_Write_NamedGrid3d_Coords_WithGridId(int fid, const char* name, int i
 	size.push_back(isize);
 	size.push_back(jsize);
 	size.push_back(ksize);
-	size.push_back(isize - 1);
-	size.push_back(jsize - 1);
-	size.push_back(ksize - 1);
+	size.push_back(dimOr1(isize - 1));
+	size.push_back(dimOr1(jsize - 1));
+	size.push_back(dimOr1(ksize - 1));
 	auto zone = base->createZone(name, H5CgnsZone::Type::Structured, size);
 
 	auto totalSize = isize * jsize * ksize;
