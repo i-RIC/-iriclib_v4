@@ -52,13 +52,6 @@ int readDataArray(hid_t groupId, const std::string& name, const std::string& val
 
 	H5GroupCloser closer(gId);
 
-	std::unordered_set<std::string> tmp_names;
-
-	H5Util::getGroupNames(gId, &tmp_names);
-	if (tmp_names.find(valName) == tmp_names.end()) {
-		return IRIC_DATA_NOT_FOUND;
-	}
-
 	_IRIC_LOGGER_TRACE_CALL_START("H5Util::readDataArrayValue");
 	ier = H5Util::readDataArrayValue(gId, valName, values);
 	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::readDataArrayValue", ier);
@@ -77,13 +70,6 @@ int readDataArray(hid_t groupId, const std::string& name, const std::string& val
 
 	H5GroupCloser closer(gId);
 
-	std::unordered_set<std::string> tmp_names;
-
-	H5Util::getGroupNames(gId, &tmp_names);
-	if (tmp_names.find(valName) == tmp_names.end()) {
-		return IRIC_DATA_NOT_FOUND;
-	}
-
 	_IRIC_LOGGER_TRACE_CALL_START("H5Util::readDataArrayValue");
 	ier = H5Util::readDataArrayValue(gId, valName, values);
 	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::readDataArrayValue", ier);
@@ -101,13 +87,6 @@ int readDimensions(hid_t groupId, const std::string& name, const std::string& va
 	RETURN_IF_ERR;
 
 	H5GroupCloser closer(gId);
-
-	std::unordered_set<std::string> tmp_names;
-
-	H5Util::getGroupNames(gId, &tmp_names);
-	if (tmp_names.find(valName) == tmp_names.end()) {
-		return IRIC_DATA_NOT_FOUND;
-	}
 
 	hid_t gId2;
 	_IRIC_LOGGER_TRACE_CALL_START("H5Util::openGroup");
@@ -303,10 +282,7 @@ int H5CgnsGridAttributes::getValueNames(std::vector<std::string>* names) const
 
 int H5CgnsGridAttributes::getValueNames(std::unordered_set<std::string>* names) const
 {
-	_IRIC_LOGGER_TRACE_CALL_START("H5Util::getGroupNames");
-	int ier = H5Util::getGroupNames(impl->m_groupId, names);
-	_IRIC_LOGGER_TRACE_CALL_END_WITHVAL("H5Util::getGroupNames", ier);
-	RETURN_IF_ERR;
+	*names = impl->m_names;
 
 	return IRIC_NO_ERROR;
 }
